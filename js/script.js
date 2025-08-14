@@ -1,21 +1,3 @@
-
-// Logger global para capturar erros no GitHub Pages
-window.addEventListener('error', function (event) {
-    console.log("[ALERTA] ERRO CAPTURADO:", event.message, "em", event.filename, "linha", event.lineno);
-    const errBox = document.createElement('div');
-    errBox.style.position = 'fixed';
-    errBox.style.bottom = '0';
-    errBox.style.left = '0';
-    errBox.style.width = '100%';
-    errBox.style.backgroundColor = 'rgba(255,0,0,0.8)';
-    errBox.style.color = '#fff';
-    errBox.style.padding = '8px';
-    errBox.style.fontSize = '14px';
-    errBox.style.zIndex = '99999';
-    errBox.innerText = "Erro: " + event.message + " (" + event.filename + ":" + event.lineno + ")";
-    document.body.appendChild(errBox);
-});
-
 const app = document.getElementById('app');
 let currentUser = null;
 let reports = JSON.parse(localStorage.getItem('reports_v8') || '[]');
@@ -29,16 +11,16 @@ const byDateDesc = (a,b)=> (a.data>b.data?-1:a.data<b.data?1:0);
 
 // Screens
 function renderLogin(){
-  app.innerHTML = `<header><h1>Relatorio de Diferencas</h1></header>
+  app.innerHTML = `<header><h1>Relatório de Diferenças</h1></header>
   <div class="container"><div class="card">
-    <div class="row"><input id="matricula" placeholder="Matricula"><input id="senha" type="password" placeholder="Senha"></div>
-    <div class="row"><button onclick="login()">Login</button><button onclick="renderRegister()">Cadastrar novo usuario</button></div>
+    <div class="row"><input id="matricula" placeholder="Matrícula"><input id="senha" type="password" placeholder="Senha"></div>
+    <div class="row"><button onclick="login()">Login</button><button onclick="renderRegister()">Cadastrar novo usuário</button></div>
   </div></div>`;
 }
 function renderRegister(){
-  app.innerHTML = `<header><h1>Cadastrar Usuario</h1></header>
+  app.innerHTML = `<header><h1>Cadastrar Usuário</h1></header>
   <div class="container"><div class="card">
-    <div class="row"><input id="matricula" placeholder="Matricula"><input id="nome" placeholder="Nome"><input id="senha" type="password" placeholder="Senha"></div>
+    <div class="row"><input id="matricula" placeholder="Matrícula"><input id="nome" placeholder="Nome"><input id="senha" type="password" placeholder="Senha"></div>
     <div class="row"><button onclick="register()">Cadastrar</button><button onclick="renderLogin()">Voltar</button></div>
   </div></div>`;
 }
@@ -49,15 +31,15 @@ function register(){
   const n = document.getElementById('nome').value.trim();
   const s = document.getElementById('senha').value.trim();
   if(!m||!n||!s) return alert("Preencha todos os campos.");
-  if(users.find(u=>u.matricula===m)) return alert("Matricula ja cadastrada.");
+  if(users.find(u=>u.matricula===m)) return alert("Matrícula já cadastrada.");
   users.push({matricula:m,nome:n,senha:s});
-  saveUsers(); alert("Usuario cadastrado!"); renderLogin();
+  saveUsers(); alert("Usuário cadastrado!"); renderLogin();
 }
 function login(){
   const m = document.getElementById('matricula').value.trim();
   const s = document.getElementById('senha').value.trim();
   const user = users.find(u=>u.matricula===m && u.senha===s);
-  if(!user) return alert("Credenciais invalidas.");
+  if(!user) return alert("Credenciais inválidas.");
   currentUser = user;
   renderMain();
 }
@@ -69,7 +51,7 @@ function changePassword(){
   saveUsers(); alert("Senha alterada!");
 }
 
-// Pos conferencia
+// Pós conferência
 function openObsPopup(idx){
   const isAdmin = admins.includes(currentUser.matricula);
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='overlayObs';
@@ -85,8 +67,28 @@ function openObsPopup(idx){
       </div>
     </div>`).join("");
 
-  \1
-  // forca cor branca no campo de pos-conferencia
+  
+  // (reconstruido) conteúdo do popup de Pós conferência
+  r.posObs = r.posObs || { images: [], text: "" };
+  popup.innerHTML = `
+    <div class="popup-header">
+      <h3>Obs pos conferencia</h3>
+      <button class="close" onclick="closeObsPopup()">×</button>
+    </div>
+    <div class="popup-body">
+      <div class="row">
+        <textarea id="posObsField" style="color:#fff; -webkit-text-fill-color:#fff; background-color:#333; caret-color:#fff;" ${isAdmin ? "" : "readonly"}>${r.posObs.text || ""}</textarea>
+      </div>
+      ${isAdmin ? `<div class="row"><input id="imgInput" type="file" accept="image/*" multiple></div>` : ``}
+      <div class="thumbs">${thumbs || ''}</div>
+    </div>
+    <div class="popup-actions">
+      ${isAdmin ? `<button onclick="saveObs(${idx})">Salvar</button><button onclick="addObsImages(${idx})">Adicionar Imagens</button>` : ``}
+      <button onclick="closeObsPopup()">Fechar</button>
+    </div>
+  `;
+
+  // força cor branca no campo de pós-conferência
   setTimeout(() => {
     const f = document.getElementById('posObsField');
     if (f) {
@@ -126,7 +128,7 @@ function deleteObsImage(idx, j){
 function saveObs(idx){
   const r = reports[idx];
   r.posObs.text = document.getElementById('posObsField').value;
-  saveReports(); alert('Pos conferencia salva!'); renderMain();
+  saveReports(); alert('Pós conferência salva!'); renderMain();
 }
 
 // CRUD
@@ -134,7 +136,7 @@ function addReport(){
   const data = document.getElementById('data').value;
   const folha = parseFloat(document.getElementById('folha').value);
   const dinheiro = parseFloat(document.getElementById('dinheiro').value);
-  if(isNaN(folha)||isNaN(dinheiro) || !data) return alert("Preencha data e valores numericos.");
+  if(isNaN(folha)||isNaN(dinheiro) || !data) return alert("Preencha data e valores numéricos.");
   const obs = document.getElementById('obs').value;
   const sf = (dinheiro - folha).toFixed(2);
   const matricula = document.getElementById('userSelect') ? document.getElementById('userSelect').value : currentUser.matricula;
@@ -142,7 +144,7 @@ function addReport(){
   saveReports(); renderMain();
 }
 function deleteReport(i){
-  if(!confirm("Excluir este relatorio?")) return;
+  if(!confirm("Excluir este relatório?")) return;
   reports.splice(i,1); saveReports(); renderMain();
 }
 function toggleReport(i){ document.getElementById('report-'+i)?.classList.toggle('hidden'); }
@@ -150,7 +152,7 @@ function toggleReport(i){ document.getElementById('report-'+i)?.classList.toggle
 // List
 function renderMain(){
   const isAdmin = admins.includes(currentUser.matricula);
-  let top = `<header><h1>Relatorio de Diferencas <span class="badge">${isAdmin?'Admin':'Usuario'}</span></h1>
+  let top = `<header><h1>Relatório de Diferenças <span class="badge">${isAdmin?'Admin':'Usuário'}</span></h1>
     <div><span class="small">${currentUser.nome} (${currentUser.matricula})</span>
     <button onclick="changePassword()">Alterar Senha</button><button onclick="logout()">Logout</button></div></header>`;
   let content = `<div class="container">`;
@@ -162,20 +164,20 @@ function renderMain(){
       const userOptions = users.map(u=>`<option value="${u.matricula}">${u.matricula} - ${u.nome}</option>`).join('');
       content += `
         <div class="card">
-          <h3>Gerar Relatorio</h3>
+          <h3>Gerar Relatório</h3>
           <div class="row">
             <select id="userSelect">${userOptions}</select>
             <input id="data" type="date">
             <input id="folha" type="number" step="0.01" placeholder="Valor folha (R$)">
             <input id="dinheiro" type="number" step="0.01" placeholder="Valor em dinheiro (R$)">
-            <input id="obs" placeholder="Observacao">
+            <input id="obs" placeholder="Observação">
           </div>
           <div class="row"><button onclick="addReport()">Salvar</button></div>
         </div>
         <div class="card">
-          <h3>Matriculas</h3>
-          ${(mats.length? mats.map(m=>`<button class="chip group" onclick="openAdminMat('${m}')">${m}</button>`).join('') : '<span class="small">Sem relatorios.</span>')}
-          <p class="small">Clique numa matricula para ver os caixas.</p>
+          <h3>Matrículas</h3>
+          ${(mats.length? mats.map(m=>`<button class="chip group" onclick="openAdminMat('${m}')">${m}</button>`).join('') : '<span class="small">Sem relatórios.</span>')}
+          <p class="small">Clique numa matrícula para ver os caixas.</p>
         </div>`;
     } else {
       const all = reports.filter(r=>r.matricula===adminViewMatricula).sort(byDateDesc);
@@ -183,10 +185,10 @@ function renderMain(){
       content += `
         <div class="card">
           <div class="row">
-            <button onclick="adminViewMatricula=null; renderMain()">? Voltar</button>
-            <div class="badge">Matricula ${adminViewMatricula}</div>
+            <button onclick="adminViewMatricula=null; renderMain()">← Voltar</button>
+            <div class="badge">Matrícula ${adminViewMatricula}</div>
           </div>
-          <h3>Ultimos 20 relatorios</h3>
+          <h3>Últimos 20 relatórios</h3>
           ${renderReports(latest, true)}
           <hr/>
           <div class="row"><input type="date" id="filterDateAdmin"><button onclick="filterOlderAdmin()">Filtrar mais antigos</button></div>
@@ -198,33 +200,33 @@ function renderMain(){
     const top15 = mine.slice(0,15);
     const rest = mine.slice(15);
     content += `<div class="card">
-        <h3>Meus relatorios</h3>
+        <h3>Meus relatórios</h3>
         ${renderReports(top15, false, false)}
-        ${rest.length? `<hr/><details><summary>Relatorios antigos (minimizados)</summary>${renderReports(rest, false, true)}</details>` : ''}
+        ${rest.length? `<hr/><details><summary>Relatórios antigos (minimizados)</summary>${renderReports(rest, false, true)}</details>` : ''}
       </div>`;
   }
   content += `</div>`;
   app.innerHTML = top + content;
 }
 function renderReports(list, asAdmin, startMinimized=false){
-  if(!list.length) return '<span class="small">Sem relatorios.</span>';
+  if(!list.length) return '<span class="small">Sem relatórios.</span>';
   return list.map(r=>{
     const i = reports.indexOf(r);
     const hasPos = r.posObs && ((r.posObs.text||"").trim().length>0 || (r.posObs.images||[]).length>0);
     return `<div class="report">
       <div class="head">
-        <div class="meta"><strong>${r.data}</strong> ? Matricula: ${r.matricula} ${hasPos?'<span class="alert">Verificar pos conferencia</span>':''}</div>
+        <div class="meta"><strong>${r.data}</strong> — Matrícula: ${r.matricula} ${hasPos?'<span class="alert">Verificar pós conferência</span>':''}</div>
         <div class="actions">
           ${asAdmin? `<button onclick="deleteReport(${i})">Excluir</button>`:''}
           <button onclick="toggleReport(${i})">Ver/Esconder</button>
-          <button onclick="openObsPopup(${i})">Pos conferencia</button>
+          <button onclick="openObsPopup(${i})">Pós conferência</button>
         </div>
       </div>
       <div id="report-${i}" class="${startMinimized?'hidden':''}">
         Folha: <span class="kbd">${brl(r.folha)}</span> &nbsp;|&nbsp;
         Dinheiro: <span class="kbd">${brl(r.dinheiro)}</span> &nbsp;|&nbsp;
         Sobra/Falta: <span class="kbd">${brl(r.sf)}</span><br/>
-        Observacao: ${r.obs||''}
+        Observação: ${r.obs||''}
       </div>
     </div>`;
   }).join('');
