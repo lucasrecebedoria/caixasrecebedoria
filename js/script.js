@@ -85,7 +85,7 @@ console.log("DEBUG: Entrando na função function openObsPopup(");function openO
     </div>
     <div class="popup-body">
       <div class="row">
-        <textarea id="posObsField" ${isAdmin ? "" : "readonly"}>${r.posObs.text || ""}</textarea>
+        <textarea id="posObsField" style="color:#fff; -webkit-text-fill-color:#fff; background-color:#333; caret-color:#fff;" ${isAdmin ? "" : "readonly"}>${r.posObs.text || ""}</textarea>
       </div>
       ${adminInputRow}
       <div class="thumbs">${thumbs || ''}</div>
