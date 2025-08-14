@@ -1,3 +1,4 @@
+console.log("DEBUG: script.js iniciou execução");
 const app = document.getElementById('app');
 let currentUser = null;
 let reports = JSON.parse(localStorage.getItem('reports_v8') || '[]');
@@ -10,14 +11,14 @@ const saveUsers   = ()=>localStorage.setItem('users_v6', JSON.stringify(users));
 const byDateDesc = (a,b)=> (a.data>b.data?-1:a.data<b.data?1:0);
 
 // Screens
-function renderLogin(){
+console.log("DEBUG: Entrando na função function renderLogin(");function renderLogin(){
   app.innerHTML = `<header><h1>Relatório de Diferenças</h1></header>
   <div class="container"><div class="card">
     <div class="row"><input id="matricula" placeholder="Matrícula"><input id="senha" type="password" placeholder="Senha"></div>
     <div class="row"><button onclick="login()">Login</button><button onclick="renderRegister()">Cadastrar novo usuário</button></div>
   </div></div>`;
 }
-function renderRegister(){
+console.log("DEBUG: Entrando na função function renderRegister(");function renderRegister(){
   app.innerHTML = `<header><h1>Cadastrar Usuário</h1></header>
   <div class="container"><div class="card">
     <div class="row"><input id="matricula" placeholder="Matrícula"><input id="nome" placeholder="Nome"><input id="senha" type="password" placeholder="Senha"></div>
@@ -26,7 +27,7 @@ function renderRegister(){
 }
 
 // Auth
-function register(){
+console.log("DEBUG: Entrando na função function register(");function register(){
   const m = document.getElementById('matricula').value.trim();
   const n = document.getElementById('nome').value.trim();
   const s = document.getElementById('senha').value.trim();
@@ -35,7 +36,7 @@ function register(){
   users.push({matricula:m,nome:n,senha:s});
   saveUsers(); alert("Usuário cadastrado!"); renderLogin();
 }
-function login(){
+console.log("DEBUG: Entrando na função function login(");function login(){
   const m = document.getElementById('matricula').value.trim();
   const s = document.getElementById('senha').value.trim();
   const user = users.find(u=>u.matricula===m && u.senha===s);
@@ -43,8 +44,8 @@ function login(){
   currentUser = user;
   renderMain();
 }
-function logout(){ currentUser=null; renderLogin(); }
-function changePassword(){
+console.log("DEBUG: Entrando na função function logout(");function logout(){ currentUser=null; renderLogin(); }
+console.log("DEBUG: Entrando na função function changePassword(");function changePassword(){
   const nova = prompt("Digite a nova senha:");
   if(!nova) return;
   users = users.map(u=>u.matricula===currentUser.matricula? {...u,senha:nova}:u);
@@ -52,7 +53,7 @@ function changePassword(){
 }
 
 // Pós conferência
-function openObsPopup(idx){
+console.log("DEBUG: Entrando na função function openObsPopup(");function openObsPopup(idx){
   const isAdmin = admins.includes(currentUser.matricula);
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='overlayObs';
   const popup   = document.createElement('div'); popup.className='popup'; popup.id='popupObs';
@@ -83,7 +84,7 @@ function openObsPopup(idx){
       <div class="thumbs">${thumbs || ''}</div>
     </div>
     <div class="popup-actions">
-      ${isAdmin ? `<button onclick="saveObs(${idx})">Salvar</button><button onclick="addObsImages(${idx})">Adicionar Imagens</button>` : ``}
+      ${isAdmin ? `<button onclick="" + idx + "">Salvar</button><button onclick="" + idx + "">Adicionar Imagens</button>` : ``}
       <button onclick="closeObsPopup()">Fechar</button>
     </div>
   `;
@@ -102,8 +103,8 @@ function openObsPopup(idx){
 
   document.body.appendChild(overlay); document.body.appendChild(popup);
 }
-function closeObsPopup(){ document.getElementById('overlayObs')?.remove(); document.getElementById('popupObs')?.remove(); }
-function addObsImages(idx){
+console.log("DEBUG: Entrando na função function closeObsPopup(");function closeObsPopup(){ document.getElementById('overlayObs')?.remove(); document.getElementById('popupObs')?.remove(); }
+console.log("DEBUG: Entrando na função function addObsImages(");function addObsImages(idx){
   const input = document.getElementById('imgInput');
   if(!input || !input.files?.length) return;
   const r = reports[idx];
@@ -120,19 +121,19 @@ function addObsImages(idx){
     reader.readAsDataURL(file);
   });
 }
-function deleteObsImage(idx, j){
+console.log("DEBUG: Entrando na função function deleteObsImage(");function deleteObsImage(idx, j){
   const r = reports[idx]; if(!r.posObs?.images) return;
   r.posObs.images.splice(j,1);
   saveReports(); closeObsPopup(); openObsPopup(idx); renderMain();
 }
-function saveObs(idx){
+console.log("DEBUG: Entrando na função function saveObs(");function saveObs(idx){
   const r = reports[idx];
   r.posObs.text = document.getElementById('posObsField').value;
   saveReports(); alert('Pós conferência salva!'); renderMain();
 }
 
 // CRUD
-function addReport(){
+console.log("DEBUG: Entrando na função function addReport(");function addReport(){
   const data = document.getElementById('data').value;
   const folha = parseFloat(document.getElementById('folha').value);
   const dinheiro = parseFloat(document.getElementById('dinheiro').value);
@@ -143,14 +144,14 @@ function addReport(){
   reports.push({data, folha, dinheiro, sf, obs, matricula, posObs:{text:"", images:[]}});
   saveReports(); renderMain();
 }
-function deleteReport(i){
+console.log("DEBUG: Entrando na função function deleteReport(");function deleteReport(i){
   if(!confirm("Excluir este relatório?")) return;
   reports.splice(i,1); saveReports(); renderMain();
 }
-function toggleReport(i){ document.getElementById('report-'+i)?.classList.toggle('hidden'); }
+console.log("DEBUG: Entrando na função function toggleReport(");function toggleReport(i){ document.getElementById('report-'+i)?.classList.toggle('hidden'); }
 
 // List
-function renderMain(){
+console.log("DEBUG: Entrando na função function renderMain(");function renderMain(){
   const isAdmin = admins.includes(currentUser.matricula);
   let top = `<header><h1>Relatório de Diferenças <span class="badge">${isAdmin?'Admin':'Usuário'}</span></h1>
     <div><span class="small">${currentUser.nome} (${currentUser.matricula})</span>
@@ -208,7 +209,7 @@ function renderMain(){
   content += `</div>`;
   app.innerHTML = top + content;
 }
-function renderReports(list, asAdmin, startMinimized=false){
+console.log("DEBUG: Entrando na função function renderReports(");function renderReports(list, asAdmin, startMinimized=false){
   if(!list.length) return '<span class="small">Sem relatórios.</span>';
   return list.map(r=>{
     const i = reports.indexOf(r);
@@ -231,13 +232,14 @@ function renderReports(list, asAdmin, startMinimized=false){
     </div>`;
   }).join('');
 }
-function filterOlderAdmin(){
+console.log("DEBUG: Entrando na função function filterOlderAdmin(");function filterOlderAdmin(){
   const date = document.getElementById('filterDateAdmin').value;
   if(!date){ document.getElementById('olderAdmin').innerHTML = '<span class="small">Escolha uma data.</span>'; return; }
   const older = reports.filter(r=>r.matricula===adminViewMatricula && r.data<=date)
                        .sort(byDateDesc).slice(20);
   document.getElementById('olderAdmin').innerHTML = renderReports(older, true, true);
 }
-function openAdminMat(mat){ adminViewMatricula = mat; renderMain(); }
+console.log("DEBUG: Entrando na função function openAdminMat(");function openAdminMat(mat){ adminViewMatricula = mat; renderMain(); }
 
 renderLogin();
+console.log("DEBUG: script.js terminou de carregar");
