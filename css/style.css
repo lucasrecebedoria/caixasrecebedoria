@@ -126,3 +126,12 @@ h1, h2, h3, label {
   -webkit-text-fill-color:#fff !important;
   caret-color:#fff !important;
 }
+
+
+/* Texto branco apenas no campo Pós conferência */
+#posObsField {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    background-color: #333;
+    caret-color: #fff;
+}
