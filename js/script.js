@@ -160,7 +160,7 @@ console.log("DEBUG: Entrando na função function toggleReport(");function toggl
 // List
 console.log("DEBUG: Entrando na função function renderMain(");function renderMain(){
   const isAdmin = admins.includes(currentUser.matricula);
-  let top = `<header><h1>Relatório de Diferenças <span class="badge">${isAdmin?'Admin':'Usuário'}</span></h1>
+function renderMain() {
     <div><span class="small">${currentUser.nome} (${currentUser.matricula})</span>
     <button onclick="changePassword()">Alterar Senha</button><button onclick="logout()">Logout</button></div></header>`;
   let content = `<div class="container">`;
