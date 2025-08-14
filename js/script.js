@@ -71,6 +71,13 @@ console.log("DEBUG: Entrando na função function openObsPopup(");function openO
   
   // (reconstruido) conteúdo do popup de Pós conferência
   r.posObs = r.posObs || { images: [], text: "" };
+  
+  // conteúdo reconstruido do popup de Pos conferencia (seguro)
+  r.posObs = r.posObs || { images: [], text: "" };
+  const adminInputRow = isAdmin ? '<div class="row"><input id="imgInput" type="file" accept="image/*" multiple></div>' : '';
+  const adminActions = isAdmin 
+    ? '<button onclick="saveObs(' + idx + ')">Salvar</button><button onclick="addObsImages(' + idx + ')">Adicionar Imagens</button>' 
+    : '';
   popup.innerHTML = `
     <div class="popup-header">
       <h3>Obs pos conferencia</h3>
@@ -80,14 +87,14 @@ console.log("DEBUG: Entrando na função function openObsPopup(");function openO
       <div class="row">
         <textarea id="posObsField" style="color:#fff; -webkit-text-fill-color:#fff; background-color:#333; caret-color:#fff;" ${isAdmin ? "" : "readonly"}>${r.posObs.text || ""}</textarea>
       </div>
-      ${isAdmin ? `<div class="row"><input id="imgInput" type="file" accept="image/*" multiple></div>` : ``}
+      ${adminInputRow}
       <div class="thumbs">${thumbs || ''}</div>
     </div>
     <div class="popup-actions">
-      ${isAdmin ? `<button onclick="" + idx + "">Salvar</button><button onclick="" + idx + "">Adicionar Imagens</button>` : ``}
+      ${adminActions}
       <button onclick="closeObsPopup()">Fechar</button>
     </div>
-  `;
+
 
   // força cor branca no campo de pós-conferência
   setTimeout(() => {
