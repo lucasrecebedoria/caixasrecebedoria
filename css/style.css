@@ -25,7 +25,7 @@ button:hover{filter:brightness(1.2)}
 hr{border:none;border-top:1px solid #2a2a2a;margin:16px 0}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999}
 .popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(680px,92vw);max-height:85vh;overflow:auto;background:#121212;border:2px solid var(--border);border-radius:16px;padding:16px;z-index:10000;text-align:center}
-.popup h3{margin-top:0}.popup textarea{width:100%;min-height:140px;background:#1a1a1a}
+.popup h3{margin-top:0}
 .thumb{display:flex;align-items:center;gap:8px;margin:6px 0}
 .thumb img{width:84px;height:64px;object-fit:cover;border:1px solid var(--border);border-radius:8px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -95,29 +95,13 @@ h1, h2, h3, label {
 
 /* Força cor branca no campo de Pós Conferência, inclusive em WebKit/Chromium */
 #posObsField,
-.popup textarea#posObsField {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    caret-color: #ffffff !important;
-    background-color: #333333 !important;
-}
 
-.popup textarea,
-.popup textarea::placeholder {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    caret-color: #ffffff !important;
-}
+
+
 
 
 /* Forçar branco em campos dentro de popups e no campo de pós conferência */
-.popup textarea,
-.popup input,
-#posObsField {
-  color:#fff !important;
-  -webkit-text-fill-color:#fff !important;
-  caret-color:#fff !important;
-}
+
 
 
 /* Cor branca apenas para o campo Obs pós conferência */
@@ -149,4 +133,20 @@ input, textarea, select {
     -webkit-text-fill-color: #fff !important;
     background-color: #333;
     caret-color: #fff;
+}
+
+
+/* --- RESET DE CORES PARA CAMPOS EDITAVEIS (GLOBAL) --- */
+input, textarea, select {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  caret-color: #000 !important;
+}
+
+/* --- APENAS o campo do popup "Pos conferencia" deve ser branco --- */
+#posObsField {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff !important;
+  background-color: #333 !important;
 }
