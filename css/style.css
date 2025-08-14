@@ -135,3 +135,18 @@ h1, h2, h3, label {
     background-color: #333;
     caret-color: #fff;
 }
+
+
+/* Reset para todos os campos editáveis exceto Pós conferência */
+input, textarea, select {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+}
+
+/* Texto branco apenas no campo Pós conferência */
+#posObsField {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    background-color: #333;
+    caret-color: #fff;
+}
