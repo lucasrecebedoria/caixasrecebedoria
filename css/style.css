@@ -128,14 +128,9 @@ h1, h2, h3, label {
 }
 
 
-/* Campos editáveis - fundo cinza escuro e texto branco */
-input[type="text"],
-input[type="number"],
-input[type="date"],
-input[type="email"],
-input[type="password"],
-textarea,
-[contenteditable="true"] {
-    background-color: #333333 !important;
-    color: #ffffff !important;
+/* === Override: campos editáveis com fundo cinza chumbo e texto branco === */
+input[type="text"], input[type="number"], input[type="date"], input[type="email"],
+input[type="password"], textarea, select, [contenteditable="true"] {
+  background-color: #2f2f2f !important;
+  color: #ffffff !important;
 }
